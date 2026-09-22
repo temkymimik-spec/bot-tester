@@ -4,7 +4,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "")
-ADMIN_IDS = [int(x) for x in os.getenv("ADMIN_IDS", "").split(",") if x.strip()]
-DATA_PATH = os.getenv("DATA_PATH", "data/bot_data.json")
-MEDIA_DIR = os.getenv("MEDIA_DIR", "media")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
+
+OWNER_ID = int(os.getenv("OWNER_ID", "0") or 0)
+ADMIN_IDS = [
+    int(x.strip())
+    for x in os.getenv("ADMIN_IDS", "").split(",")
+    if x.strip().isdigit()
+]
+DB_FILE = os.getenv("DB_FILE", "signalsbot.db").strip() or "signalsbot.db"
+
+MSC = 3

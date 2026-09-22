@@ -1,0 +1,15 @@
+[Unit]
+Description=PRO SIGNALS Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/po-signals-bot
+ExecStart=/opt/po-signals-bot/.venv/bin/python main.py
+Restart=always
+RestartSec=5
+EnvironmentFile=/opt/po-signals-bot/.env
+
+[Install]
+WantedBy=multi-user.target
