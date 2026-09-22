@@ -40,7 +40,8 @@ class Database:
         await self._commit()
 
         for k, v in {
-            "referral_link": "https://pocketoption.com/",
+            "referral_link_ru": "https://pocketoption.com/",
+            "referral_link_int": "https://pocketoption.com/",
             "promo_code": "BONUS50",
             "admin_contact": "",
             "min_deposit": "10",
@@ -60,6 +61,20 @@ class Database:
                     "INSERT INTO settings(key, value) VALUES(?, ?)", (k, v)
                 )
         await self._commit()
+
+        old = await self.get_setting("referral_link")
+        if old and old != "https://pocketoption.com/":
+            for new_key in ("referral_link_ru", "referral_link_int"):
+                cur = await self._conn.execute(
+                    "SELECT value FROM settings WHERE key=?", (new_key,)
+                )
+                row = await cur.fetchone()
+                if row and row[0] == "https://pocketoption.com/":
+                    await self._conn.execute(
+                        "UPDATE settings SET value=? WHERE key=?",
+                        (old, new_key),
+                    )
+            await self._commit()
 
         if config.OWNER_ID:
             await self.add_admin(config.OWNER_ID, 0)

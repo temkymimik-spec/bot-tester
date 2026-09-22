@@ -18,6 +18,15 @@ class UserStates(StatesGroup):
     wait_po_id = State()
 
 
+RUS_LANGS = {"ru", "uk", "be"}
+
+
+async def _ref_for(lang_code):
+    if (lang_code or "").lower() in RUS_LANGS:
+        return await db.get_setting("referral_link_ru")
+    return await db.get_setting("referral_link_int")
+
+
 async def ai_label():
     from ai_engine import provider_label
 
@@ -38,7 +47,7 @@ async def cmd_start(msg: Message, state: FSMContext):
         await msg.answer(admin_hint())
 
     user = await db.get_user(tg)
-    ref = await db.get_setting("referral_link")
+    ref = await _ref_for(msg.from_user.language_code)
     promo = await db.get_setting("promo_code")
     contact = await db.get_setting("admin_contact")
     min_dep = await db.get_int("min_deposit", 10)

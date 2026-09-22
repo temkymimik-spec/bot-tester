@@ -62,10 +62,10 @@ def pending_kb(users):
 def settings_kb():
     return kb(
         [
-            [btn("🔗 Реф. ссылка", "set:referral_link"), btn("🎁 Промокод", "set:promo_code")],
-            [btn("👤 Контакт админа", "set:admin_contact"), btn("💰 Мин. депозит ($)", "set:min_deposit")],
-            [btn("🔑 AI API Key", "set:openai_key"), btn("🤖 AI Модель", "set:openai_model")],
-            [btn("🌐 AI Base URL", "set:openai_base")],
+            [btn("🇷🇺 Реф. РФ", "set:referral_link_ru"), btn("🌍 Реф. INT", "set:referral_link_int")],
+            [btn("🎁 Промокод", "set:promo_code"), btn("👤 Контакт админа", "set:admin_contact")],
+            [btn("💰 Мин. депозит ($)", "set:min_deposit"), btn("🔑 AI API Key", "set:openai_key")],
+            [btn("🤖 AI Модель", "set:openai_model"), btn("🌐 AI Base URL", "set:openai_base")],
             [btn("⬅️ Главное меню", "adm:menu")],
         ]
     )

@@ -209,7 +209,8 @@ async def reject_user(cb: CallbackQuery):
 
 async def _label_for_key(key):
     return {
-        "referral_link": "Реф. ссылка",
+        "referral_link_ru": "Реф. ссылка 🇷🇺 (РФ)",
+        "referral_link_int": "Реф. ссылка 🌍 (INT)",
         "promo_code": "Промокод",
         "admin_contact": "Контакт (юзернейм без @)",
         "min_deposit": "Мин. депозит ($)",

@@ -89,7 +89,8 @@ async def signal_loop():
 async def default_settings_text(db):
     return (
         f"⚙️ <b>Настройки</b>\n\n"
-        f"🔗 Реф. ссылка:\n{await db.get_setting('referral_link')}\n"
+        f"🇷🇺 Реф. (РФ):\n{await db.get_setting('referral_link_ru')}\n"
+        f"🌍 Реф. (INT):\n{await db.get_setting('referral_link_int')}\n"
         f"🎁 Промокод: <b>{await db.get_setting('promo_code')}</b>\n"
         f"👤 Контакт: @{await db.get_setting('admin_contact') or 'не задан'}\n"
         f"💰 Мин. депозит: <b>${await db.get_int('min_deposit', 10)}</b>\n"
