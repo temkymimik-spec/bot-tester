@@ -44,7 +44,7 @@ class Database:
             "promo_code": "BONUS50",
             "admin_contact": "",
             "min_deposit": "10",
-            "pair": "BTCUSDT",
+            "pair": "BTC/USD",
             "interval": "60",
             "autosignals": "0",
             "ai_provider": "strategy",

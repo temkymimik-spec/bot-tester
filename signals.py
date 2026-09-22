@@ -4,7 +4,7 @@ import logging
 from datetime import timedelta
 
 from ai_engine import generate_signal, provider_label
-from market import get_candles
+from market import exchange_symbol, get_candles
 from texts import msk_now, signal_text
 
 log = logging.getLogger("signals")
@@ -20,9 +20,10 @@ class SignalBus:
         self.last = None
 
     async def build(self, pair=None):
-        pair = pair or await self.db.get_setting("pair", "BTCUSDT")
+        pair = pair or await self.db.get_setting("pair", "BTC/USD")
         interval = await self.db.get_int("interval", 60)
-        candles = await get_candles(pair)
+        exc = exchange_symbol(pair)
+        candles = await get_candles(exc)
         sig = await generate_signal(self.db, pair, candles)
         now = msk_now()
         return {

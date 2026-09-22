@@ -78,6 +78,22 @@ async def _okx(pair, limit):
     )
 
 
+def normalize_display(pair):
+    p = pair.strip().upper().replace(" ", "")
+    if "/" not in p:
+        for q in ("USDT", "USDC", "USD"):
+            if p.endswith(q):
+                return p[: -len(q)] + ("/USD" if q == "USDT" else "/" + q)
+        return normalize_display(p + "USDT")
+    return p
+
+
+def exchange_symbol(pair):
+    p = normalize_display(pair)
+    base, _, quote = p.partition("/")
+    return base + ("USDT" if quote == "USD" else quote)
+
+
 PROVIDERS = (_binance, _bybit, _okx)
 
 

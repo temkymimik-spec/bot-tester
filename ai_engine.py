@@ -4,8 +4,6 @@ from datetime import datetime
 
 import httpx
 
-from market import get_candles
-
 SYSTEM_FINANCE = (
     "You are a professional intraday market analyst for ONE-MINUTE binary options."
     "You analyze 1-minute candles and predict ONLY the direction of the price 1 minute ahead."
@@ -177,7 +175,9 @@ async def generate_signal(db, pair, candles):
 
 
 async def test_ai(db, pair):
-    candles = await get_candles(pair)
+    from market import exchange_symbol, get_candles
+
+    candles = await get_candles(exchange_symbol(pair))
     provider = await db.get_setting("ai_provider", "strategy")
 
     if provider == "neuro":

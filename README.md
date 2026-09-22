@@ -46,35 +46,43 @@
 
 > Нейросеть не гарантирует прибыль. Любой сигнал — это гипотеза. ММ обязателен.
 
-## Установка на хостинг (bothost.ru / любой VPS с Ubuntu/Debian)
+## Установка (Docker — самый быстрый путь)
+
+Требуется установленный Docker (+ docker compose). На bothost это обычно уже есть, иначе:
+`apt install docker.io docker-compose-v2 -y`
 
 ```bash
 # 1. Кладём проект
-mkdir -p /opt/po-signals-bot
-# залить файлы в /opt/po-signals-bot (sftp / scp / панель)
+mkdir -p /opt/po-signals-bot && cd /opt/po-signals-bot
+# залить файлы (sftp / scp / панель)
 
 # 2. Окружение
-cd /opt/po-signals-bot
 cp .env.example .env
 nano .env   # вставить BOT_TOKEN (от @BotFather) и OWNER_ID (свой tg id)
 
-# 3. venv + зависимости
+# 3. Запуск
+docker compose up -d --build
+docker compose logs -f bot        # логи
+```
+
+Бот работает сразу: `/admin` → включи «⏯ Вкл/Выкл авто-сигналы» → «🚀 Сигнал сейчас».
+
+Перезапуск после правок: `cd /opt/po-signals-bot && docker compose up -d --build`
+База данных хранится в `./data/` (не теряется при перезапуске).
+
+## Установка без Docker (VPS)
+
+```bash
+mkdir -p /opt/po-signals-bot && cd /opt/po-signals-bot
+cp .env.example .env && nano .env   # BOT_TOKEN + OWNER_ID
+
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-# 4. systemd (автозапуск 24/7)
 cp signalsbot.service /etc/systemd/system/signalsbot.service
 systemctl daemon-reload
 systemctl enable --now signalsbot
-systemctl status signalsbot          # видим: active (running)
 journalctl -u signalsbot -f          # логи
-```
-
-Проверка: напиши боту `/admin` → включи «⏯ Вкл / Выкл авто-сигналы» → нажми «🚀 Сигнал сейчас».
-
-Обновление бота:
-```bash
-cd /opt/po-signals-bot && systemctl restart signalsbot
 ```
 
 ## Инструкция по настройке с нуля
@@ -107,11 +115,26 @@ handlers_user.py   # приветствие, ID, активация
 handlers_admin.py  # админ-панель, одобрение, настройки, рассылка, сигналы
 signals.py         # генерация и массовая рассылка сигналов
 ai_engine.py       # AI-провайдеры + FREE-стратегия (EMA/RSI)
-market.py          # свечи: Binance → Bybit → OKX
+market.py          # свечи: Binance → Bybit → OKX + маппинг пар PO→биржа
 texts.py / keyboards.py
-signalsbot.service # systemd
+Dockerfile / docker-compose.yml
+signalsbot.service # systemd (без докера)
 .env.example
 ```
+
+## Пары: как на Покете, данные с биржи
+
+Названия пар в настройках — **в стиле Pocket Option** (`BTC/USD`, `ETH/USD` …), а свечи бот честно тянет с публичных бирж (Binance → Bybit → OKX) и автоматически мапит:
+
+| Настройка (PO) | Данные (биржа) |
+|---|---|
+| `BTC/USD` | `BTCUSDT` |
+| `ETH/USD` | `ETHUSDT` |
+| `BTCUSDT` (если вписал руками) | `BTCUSDT` |
+| `ETH/USDT` | `ETHUSDT` |
+
+Свою пару можно вписать в любой форме: `BTC`, `BTC/USD`, `BTCUSDT` — бот нормализует сам.
+Никаких лишних ключей/аккаунтов биржи не нужно.
 
 ## Ограничения
 

@@ -346,23 +346,25 @@ async def sig_pair_set(cb: CallbackQuery):
 
 @router.message(AdminStates.wait_pair, F.text)
 async def sig_pair_save(msg: Message, state: FSMContext):
-    pair = msg.text.strip().upper().replace(" ", "")
-    if not re_full_pair(pair):
-        await msg.answer("⚠️ Формат пары: <code>BTCUSDT</code> (валютная пара).")
+    from market import exchange_symbol, normalize_display
+
+    raw = msg.text.strip()
+    if not re_full_pair(raw.upper().replace(" ", "")):
+        await msg.answer("⚠️ Формат пары: <code>BTC/USD</code> или <code>BTCUSDT</code>.")
         return
+    pair = normalize_display(raw)
+    exc = exchange_symbol(pair)
     await db.set_setting("pair", pair)
     await state.clear()
-    from keyboards import signals_kb
-
     await msg.answer(
-        f"✅ Пара сохранена: <b>{pair}</b>", reply_markup=back_kb()
+        f"✅ Пара сохранена: <b>{pair}</b> (данные: {exc})", reply_markup=back_kb()
     )
 
 
 def re_full_pair(pair):
     import re
 
-    return bool(re.fullmatch(r"[A-Z0-9]{6,12}", pair))
+    return bool(re.fullmatch(r"[A-Z0-9]{2,12}(/[A-Z]{2,6})?", pair))
 
 
 @router.callback_query(F.data.startswith("sig:int:"))

@@ -84,16 +84,16 @@ def signals_kb():
 
 
 PAIRS = [
-    "BTCUSDT",
-    "ETHUSDT",
-    "SOLUSDT",
-    "BNBUSDT",
-    "XRPUSDT",
-    "DOGEUSDT",
-    "ADAUSDT",
-    "PEPEUSDT",
-    "TONUSDT",
-    "LINKUSDT",
+    "BTC/USD",
+    "ETH/USD",
+    "SOL/USD",
+    "BNB/USD",
+    "XRP/USD",
+    "DOGE/USD",
+    "ADA/USD",
+    "PEPE/USD",
+    "TON/USD",
+    "LINK/USD",
 ]
 
 

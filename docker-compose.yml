@@ -1,9 +1,11 @@
 services:
   bot:
     build: .
-    container_name: trade_bot
+    container_name: po-signals-bot
     restart: unless-stopped
-    env_file: .env
+    env_file:
+      - .env
+    environment:
+      - DB_FILE=/app/data/signalsbot.db
     volumes:
       - ./data:/app/data
-      - ./media:/app/media
